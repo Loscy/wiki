@@ -5,6 +5,7 @@ import com.loscy.wiki.domain.EbookExample;
 import com.loscy.wiki.mapper.EbookMapper;
 import com.loscy.wiki.req.EbookReq;
 import com.loscy.wiki.resp.EbookResp;
+import com.loscy.wiki.util.CopyUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -22,16 +23,19 @@ public class EbookService {
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         criteria.andNameLike("%"+req.getName()+"%");
-        List<Ebook> ebookslist= ebookMapper.selectByExample(ebookExample);
+        List<Ebook> ebooklist= ebookMapper.selectByExample(ebookExample);
 
         List<EbookResp> respList = new ArrayList<>();
-        for (Ebook ebook : ebookslist) {
-            EbookResp ebookResp = new EbookResp();
-            BeanUtils.copyProperties(ebook, ebookResp);
-            respList.add(ebookResp);
-        }
+        //for (Ebook ebook : ebooklist) {
+        //    //EbookResp ebookResp = new EbookResp();
+        //    //BeanUtils.copyProperties(ebook, ebookResp);
+        //
+        //    EbookResp ebookResp = CopyUtil.copy(ebook, EbookResp.class);
+        //    respList.add(ebookResp);
+        //}
 
-        return respList;
+        List<EbookResp> list = CopyUtil.copyList(ebooklist, EbookResp.class);
+        return list;
 
     }
 }
