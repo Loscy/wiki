@@ -3,14 +3,12 @@
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
           mode="inline"
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           :style="{ height: '100%', borderRight: 0 }"
       >
         <a-sub-menu key="sub1">
           <template #title>
               <span>
-                <user-outlined />
+                <user-outlined/>
                 subnav 1111
               </span>
           </template>
@@ -22,7 +20,7 @@
         <a-sub-menu key="sub2">
           <template #title>
               <span>
-                <laptop-outlined />
+                <laptop-outlined/>
                 subnav 2
               </span>
           </template>
@@ -34,7 +32,7 @@
         <a-sub-menu key="sub3">
           <template #title>
               <span>
-                <notification-outlined />
+                <notification-outlined/>
                 subnav 3
               </span>
           </template>
@@ -48,15 +46,38 @@
     <a-layout-content
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
-      Content
+      <pre>
+{{ ebooks }}
+{{ ebooks2 }}
+      </pre>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent, onMounted, ref, reactive, toRef} from 'vue';
+import axios from 'axios';
 
 export default defineComponent({
   name: 'Home',
+  setup() {
+    console.log("setup");
+    const ebooks = ref();
+    const ebooks1 = reactive({books: []});
+    onMounted(() => {
+      console.log("onMounted")
+      axios.get("http://localhost:8880/ebook/list?name=Spring").then((response) => {
+        const data = response.data;
+        ebooks.value = data.content
+        ebooks1.books = data.content
+        console.log(response);
+      });
+    })
+
+    return {
+      ebooks,
+      ebooks2 : toRef(ebooks1, "books")
+    }
+  }
 });
 </script>
