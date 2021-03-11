@@ -11,7 +11,7 @@
           <template #title>
               <span>
                 <user-outlined />
-                subnav 1111111
+                subnav 1111
               </span>
           </template>
           <a-menu-item key="1">option1</a-menu-item>
