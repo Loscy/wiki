@@ -3,6 +3,7 @@ package com.loscy.wiki.controller;
 import com.loscy.wiki.req.EbookReq;
 import com.loscy.wiki.resp.CommonResp;
 import com.loscy.wiki.resp.EbookResp;
+import com.loscy.wiki.resp.PageResp;
 import com.loscy.wiki.service.EbookService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,8 @@ public class EbookController {
 
     @GetMapping ("/list")
     public CommonResp list(EbookReq req){
-        CommonResp<List<EbookResp>> resp = new CommonResp<>();
-        List<EbookResp> list = ebookService.list(req);
+        CommonResp<PageResp<EbookResp>> resp = new CommonResp<>();
+        PageResp<EbookResp> list = ebookService.list(req);
         resp.setContent(list);
         return resp;
     }
