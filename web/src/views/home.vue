@@ -69,7 +69,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref, reactive, toRef} from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 
 const listData: Record<string, string>[] = [];
@@ -90,18 +90,15 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const ebooks = ref();
-    const ebooks1 = reactive({books: []});
     onMounted(() => {
       axios.get("/ebook/list").then((response) => {
         const data = response.data;
         ebooks.value = data.content
-        ebooks1.books = data.content
       });
     })
 
     return {
       ebooks,
-      ebooks2 : toRef(ebooks1, "books"),
       listData,
       pagination: {
         onChange: (page: any) => {

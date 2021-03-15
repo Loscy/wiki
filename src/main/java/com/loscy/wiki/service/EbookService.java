@@ -1,5 +1,7 @@
 package com.loscy.wiki.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.loscy.wiki.domain.Ebook;
 import com.loscy.wiki.domain.EbookExample;
 import com.loscy.wiki.mapper.EbookMapper;
@@ -17,6 +19,7 @@ import java.util.List;
 @Service
 public class EbookService {
 
+
     @Resource
     private EbookMapper ebookMapper;
 
@@ -27,9 +30,14 @@ public class EbookService {
             criteria.andNameLike("%"+req.getName()+"%");
         }
 
+        PageHelper.startPage(1,3);
         List<Ebook> ebooklist= ebookMapper.selectByExample(ebookExample);
 
-        List<EbookResp> respList = new ArrayList<>();
+        PageInfo<Ebook> pageInfo = new PageInfo<>(ebooklist);
+        pageInfo.getTotal();
+        pageInfo.getPages();
+
+        //List<EbookResp> respList = new ArrayList<>();
         //for (Ebook ebook : ebooklist) {
         //    //EbookResp ebookResp = new EbookResp();
         //    //BeanUtils.copyProperties(ebook, ebookResp);
