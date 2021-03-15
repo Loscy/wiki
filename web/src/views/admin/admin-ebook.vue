@@ -13,7 +13,7 @@
           @change="handleTableChange"
       >
         <template #cover="{ text: cover}">
-          <img v-if="cover" :src="cover" alt="avatar" />
+          <img v-if="cover" :src="cover" alt="avatar"/>
         </template>
         <template v-slot:action="{ text, record}">
           <a-space size="small">
@@ -69,7 +69,7 @@ export default defineComponent({
       {
         title: '封面',
         dataIndex: 'cover',
-        slots: { customRender: 'cover'}
+        slots: {customRender: 'cover'}
       },
       {
         title: '名称',
@@ -100,22 +100,28 @@ export default defineComponent({
       {
         title: 'Action',
         key: 'action',
-        slots: { customRender: 'action'},
+        slots: {customRender: 'action'},
       },
     ];
 
     /*
     * 数据查询
     * */
-    const handleQuery = (params: any) =>{
+    const handleQuery = (params: any) => {
       loading.value = true;
-      axios.get("/ebook/list").then((response) => {
+      axios.get("/ebook/list", {
+        params: {
+          page: params.page,
+          size: params.size
+        }
+      }).then((response) => {
         loading.value = false;
         const data = response.data;
-        ebooks.value = data.content
+        ebooks.value = data.content.list;
 
         //重置分页
         pagination.value.current = params.page;
+        pagination.value.total = data.content.total;
       });
     };
 
@@ -131,7 +137,10 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      handleQuery({});
+      handleQuery({
+        page: 1,
+        size: pagination.value.pageSize,
+      });
     })
 
     return {
