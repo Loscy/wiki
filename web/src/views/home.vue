@@ -73,7 +73,6 @@ import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 
 // const listData: Record<string, string>[] = [];
-//
 // for (let i = 0; i < 23; i++) {
 //   listData.push({
 //     href: 'https://www.antdv.com/',
@@ -114,7 +113,7 @@ export default defineComponent({
       actions: [
         { type: 'StarOutlined', text: '156' },
         { type: 'LikeOutlined', text: '156' },
-        { type: 'MessageOutlined', text: '2' },
+        { type: 'MessageOutlined', text: '8' },
       ],
     }
   }
