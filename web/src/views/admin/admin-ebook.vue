@@ -76,6 +76,7 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
+import { message } from 'ant-design-vue';
 
 const listData: Record<string, string>[] = [];
 
@@ -155,11 +156,16 @@ export default defineComponent({
       }).then((response) => {
         loading.value = false;
         const data = response.data;
-        ebooks.value = data.content.list;
+        if(data.success) {
+          ebooks.value = data.content.list;
 
-        //重置分页
-        pagination.value.current = params.page;
-        pagination.value.total = data.content.total;
+          //重置分页
+          pagination.value.current = params.page;
+          pagination.value.total = data.content.total;
+        }else {
+          message.error(data.message);
+        }
+
       });
     };
 
