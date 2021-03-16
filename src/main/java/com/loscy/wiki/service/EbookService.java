@@ -10,6 +10,7 @@ import com.loscy.wiki.req.EbookSaveReq;
 import com.loscy.wiki.resp.EbookQueryResp;
 import com.loscy.wiki.resp.PageResp;
 import com.loscy.wiki.util.CopyUtil;
+import com.loscy.wiki.util.SnowFlake;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -22,6 +23,9 @@ public class EbookService {
 
     @Resource
     private EbookMapper ebookMapper;
+
+    @Resource
+    private SnowFlake snowFlake;
 
     public PageResp<EbookQueryResp> list(EbookQueryReq req) {
         EbookExample ebookExample = new EbookExample();
@@ -61,6 +65,7 @@ public class EbookService {
     public void save(EbookSaveReq req) {
         Ebook ebook = CopyUtil.copy(req, Ebook.class);
         if(ObjectUtils.isEmpty(req.getId())) {
+            ebook.setId(snowFlake.nextId());
             ebookMapper.insert(ebook);
         }else {
             ebookMapper.updateByPrimaryKey(ebook);
