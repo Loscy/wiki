@@ -12,7 +12,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="ebooks"
+          :data-source="categorys"
           :pagination="pagination"
           :loading="loading"
           @change="handleTableChange"
@@ -43,31 +43,31 @@
 
       </a-table>
       <div class="about">
-        <h1>电子书管理</h1>
+        <h1>分类管理</h1>
       </div>
     </a-layout-content>
   </a-layout>
 
   <a-modal
-    title="电子书表单"
+    title="分类表单"
     v-model:visible="modalVisible"
     :confirm-loading="modalLoading"
     @ok="handleModalOk">
-      <a-form :model="ebook" :label-col="{ span: 6}"  :wrapper-col="{ span: 18 }">
+      <a-form :model="category" :label-col="{ span: 6}"  :wrapper-col="{ span: 18 }">
         <a-form-item label="封面">
-          <a-input v-model:value="ebook.cover" />
+          <a-input v-model:value="category.cover" />
         </a-form-item>
         <a-form-item label="名称">
-          <a-input v-model:value="ebook.name" />
+          <a-input v-model:value="category.name" />
         </a-form-item>
         <a-form-item label="分类一">
-          <a-input v-model:value="ebook.category1Id" />
+          <a-input v-model:value="category.category1Id" />
         </a-form-item>
         <a-form-item label="分类二">
-          <a-input v-model:value="ebook.category2Id" />
+          <a-input v-model:value="category.category2Id" />
         </a-form-item>
         <a-form-item label="描述">
-          <a-input v-model:value="ebook.description" type="text" />
+          <a-input v-model:value="category.description" type="text" />
         </a-form-item>
       </a-form>
   </a-modal>
@@ -94,9 +94,9 @@ for (let i = 0; i < 23; i++) {
 }
 
 export default defineComponent({
-  name: 'AdminEbook',
+  name: 'AdminCategory',
   setup() {
-    const ebooks = ref();
+    const categorys = ref();
     const pagination = ref({
       current: 1,
       pageSize: 5,
@@ -149,7 +149,7 @@ export default defineComponent({
     * */
     const handleQuery = (params: any) => {
       loading.value = true;
-      axios.get("/ebook/list", {
+      axios.get("/category/list", {
         params: {
           page: params.page,
           size: params.size
@@ -158,7 +158,7 @@ export default defineComponent({
         loading.value = false;
         const data = response.data;
         if(data.success) {
-          ebooks.value = data.content.list;
+          categorys.value = data.content.list;
 
           //重置分页
           pagination.value.current = params.page;
@@ -184,13 +184,13 @@ export default defineComponent({
     /*
     * 表单
     * */
-    const ebook = ref({});
+    const category = ref({});
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const handleModalOk = () => {
       modalLoading.value = true;
 
-      axios.post("/ebook/save", ebook.value).then((response) => {
+      axios.post("/category/save", category.value).then((response) => {
         const data = response.data;
         modalLoading.value = false;
         if(data.success) {
@@ -213,7 +213,7 @@ export default defineComponent({
     * */
     const edit = (record: any) => {
       modalVisible.value = true;
-      ebook.value = Tool.copy(record);
+      category.value = Tool.copy(record);
     };
 
     /*
@@ -221,7 +221,7 @@ export default defineComponent({
     * */
     const add = () => {
       modalVisible.value = true;
-      ebook.value = {}
+      category.value = {}
     }
 
     /*
@@ -230,7 +230,7 @@ export default defineComponent({
     const handleDelete = (id: number) => {
       modalLoading.value = true;
 
-      axios.delete("/ebook/delete/" + id).then((response) => {
+      axios.delete("/category/delete/" + id).then((response) => {
         const data = response.data;
         if(data.success) {
           modalVisible.value = false;
@@ -253,7 +253,7 @@ export default defineComponent({
     })
 
     return {
-      ebooks,
+      categorys,
       pagination,
       columns,
       loading,
@@ -267,7 +267,7 @@ export default defineComponent({
       handleModalOk,
       handleDelete,
 
-      ebook
+      category
     }
   }
 });
