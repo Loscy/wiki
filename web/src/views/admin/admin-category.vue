@@ -5,9 +5,22 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <p>
-        <a-button type="primary" @click="add()" size="large">
-          新增
-        </a-button>
+        <a-form layout="inline" :model="param">
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="名称">
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+              查询
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()">
+              新增
+            </a-button>
+          </a-form-item>
+        </a-form>
       </p>
       <a-table
           :columns="columns"
@@ -42,9 +55,6 @@
 
 
       </a-table>
-      <div class="about">
-        <h1>分类管理</h1>
-      </div>
     </a-layout-content>
   </a-layout>
 
@@ -54,20 +64,14 @@
     :confirm-loading="modalLoading"
     @ok="handleModalOk">
       <a-form :model="category" :label-col="{ span: 6}"  :wrapper-col="{ span: 18 }">
-        <a-form-item label="封面">
-          <a-input v-model:value="category.cover" />
-        </a-form-item>
         <a-form-item label="名称">
           <a-input v-model:value="category.name" />
         </a-form-item>
-        <a-form-item label="分类一">
-          <a-input v-model:value="category.category1Id" />
+        <a-form-item label="父分类">
+          <a-input v-model:value="category.parent" />
         </a-form-item>
-        <a-form-item label="分类二">
-          <a-input v-model:value="category.category2Id" />
-        </a-form-item>
-        <a-form-item label="描述">
-          <a-input v-model:value="category.description" type="text" />
+        <a-form-item label="顺序">
+          <a-input v-model:value="category.sort" />
         </a-form-item>
       </a-form>
   </a-modal>
@@ -96,6 +100,8 @@ for (let i = 0; i < 23; i++) {
 export default defineComponent({
   name: 'AdminCategory',
   setup() {
+    const param = ref();
+    param.value = {};
     const categorys = ref();
     const pagination = ref({
       current: 1,
@@ -107,35 +113,18 @@ export default defineComponent({
 
     const columns = [
       {
-        title: '封面',
-        dataIndex: 'cover',
-        slots: {customRender: 'cover'}
-      },
-      {
         title: '名称',
         dataIndex: 'name',
       },
       {
-        title: '分类一',
-        key: 'category1Id',
-        dataIndex: 'category1Id',
+        title: '父分类',
+        key: 'parent',
+        dataIndex: 'parent',
       },
       {
-        title: '分类二',
-        key: 'category2Id',
-        dataIndex: 'category2Id',
-      },
-      {
-        title: '文档数',
-        dataIndex: 'docCount',
-      },
-      {
-        title: '阅读数',
-        dataIndex: 'viewCount',
-      },
-      {
-        title: '点赞数',
-        dataIndex: 'voteCount',
+        title: '顺序',
+        key: 'sort',
+        dataIndex: 'sort',
       },
       {
         title: 'Action',
@@ -152,7 +141,8 @@ export default defineComponent({
       axios.get("/category/list", {
         params: {
           page: params.page,
-          size: params.size
+          size: params.size,
+          name: param.value.name,
         }
       }).then((response) => {
         loading.value = false;
@@ -257,7 +247,9 @@ export default defineComponent({
       pagination,
       columns,
       loading,
+      param,
       handleTableChange,
+      handleQuery,
 
       edit,
       add,

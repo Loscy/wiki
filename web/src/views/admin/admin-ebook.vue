@@ -5,9 +5,22 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <p>
-        <a-button type="primary" @click="add()" size="large">
-          新增
-        </a-button>
+        <a-form layout="inline" :model="param">
+          <a-form-item>
+            <a-input v-model:value="param.name" placeholder="名称">
+            </a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="handleQuery({page: 1, size: pagination.pageSize})">
+              查询
+            </a-button>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="primary" @click="add()">
+              新增
+            </a-button>
+          </a-form-item>
+        </a-form>
       </p>
       <a-table
           :columns="columns"
@@ -42,9 +55,6 @@
 
 
       </a-table>
-      <div class="about">
-        <h1>电子书管理</h1>
-      </div>
     </a-layout-content>
   </a-layout>
 
@@ -81,6 +91,7 @@ import { Tool } from "@/util/tool";
 
 const listData: Record<string, string>[] = [];
 
+
 for (let i = 0; i < 23; i++) {
   listData.push({
     href: 'https://www.antdv.com/',
@@ -96,6 +107,8 @@ for (let i = 0; i < 23; i++) {
 export default defineComponent({
   name: 'AdminEbook',
   setup() {
+    const param = ref();
+    param.value = {};
     const ebooks = ref();
     const pagination = ref({
       current: 1,
@@ -152,7 +165,8 @@ export default defineComponent({
       axios.get("/ebook/list", {
         params: {
           page: params.page,
-          size: params.size
+          size: params.size,
+          name: param.value.name
         }
       }).then((response) => {
         loading.value = false;
@@ -253,11 +267,13 @@ export default defineComponent({
     })
 
     return {
+      param,
       ebooks,
       pagination,
       columns,
       loading,
       handleTableChange,
+      handleQuery,
 
       edit,
       add,
