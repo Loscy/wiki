@@ -266,7 +266,6 @@ export default defineComponent({
     };
 
     const level1 = ref();
-
     /*
     * 数据查询
     * */
@@ -295,6 +294,7 @@ export default defineComponent({
         page: 1,
         size: pagination.value.pageSize,
       });
+      handleQueryCategory();
     })
 
     return {
