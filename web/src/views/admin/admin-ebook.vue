@@ -33,6 +33,9 @@
         <template #cover="{ text: cover}">
           <img v-if="cover" :src="cover" alt="avatar"/>
         </template>
+        <template v-slot:category="{ text, record }">
+          <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
+        </template>
         <template v-slot:action="{ text, record}">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -90,20 +93,6 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import { Tool } from "@/util/tool";
 
-const listData: Record<string, string>[] = [];
-
-
-for (let i = 0; i < 23; i++) {
-  listData.push({
-    href: 'https://www.antdv.com/',
-    title: `ant design vue part ${i}`,
-    avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    description:
-        'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-    content:
-        'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-  });
-}
 
 export default defineComponent({
   name: 'AdminEbook',
@@ -130,14 +119,9 @@ export default defineComponent({
         dataIndex: 'name',
       },
       {
-        title: '分类一',
-        key: 'category1Id',
-        dataIndex: 'category1Id',
-      },
-      {
-        title: '分类二',
-        key: 'category2Id',
-        dataIndex: 'category2Id',
+        title: '分类',
+        key: 'category',
+        slots: {customRender: 'category'},
       },
       {
         title: '文档数',
@@ -163,6 +147,7 @@ export default defineComponent({
     * */
     const handleQuery = (params: any) => {
       loading.value = true;
+      ebooks.value=[];
       axios.get("/ebook/list", {
         params: {
           page: params.page,
@@ -265,36 +250,55 @@ export default defineComponent({
       })
     };
 
-    const level1 = ref();
-    /*
-    * 数据查询
-    * */
+    const level1 =  ref();
+    let categorys: any;
+    /**
+     * 查询所有分类
+     **/
     const handleQueryCategory = () => {
       loading.value = true;
       axios.get("/category/all").then((response) => {
         loading.value = false;
         const data = response.data;
-        if(data.success) {
-          const categorys = data.content;
-          console.log("原始数据", categorys);
+        if (data.success) {
+          categorys = data.content;
+          console.log("原始数组：", categorys);
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys, 0);
-          console.log("树型结构", level1);
+          console.log("树形结构：", level1.value);
 
-        }else {
+          // 加载完分类后，再加载电子书，否则如果分类树加载很慢，则电子书渲染会报错
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize,
+          });
+        } else {
           message.error(data.message);
         }
-
       });
     };
 
+
+    const getCategoryName = (cid: number) => {
+      // console.log(cid)
+      let result = "";
+      categorys.forEach((item: any) => {
+        if (item.id === cid) {
+          // return item.name; // 注意，这里直接return不起作用
+          result = item.name;
+        }
+      });
+      return result;
+    };
+
+
     onMounted(() => {
+      handleQueryCategory();
       handleQuery({
         page: 1,
         size: pagination.value.pageSize,
       });
-      handleQueryCategory();
     })
 
     return {
@@ -306,6 +310,7 @@ export default defineComponent({
       handleQueryCategory,
       handleTableChange,
       handleQuery,
+      getCategoryName,
 
       edit,
       add,
