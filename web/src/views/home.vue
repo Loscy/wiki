@@ -9,13 +9,9 @@
           <template #title>
               <span>
                 <user-outlined/>
-                subnav 1111
+                首页
               </span>
           </template>
-          <a-menu-item key="1">option1</a-menu-item>
-          <a-menu-item key="2">option2</a-menu-item>
-          <a-menu-item key="3">option3</a-menu-item>
-          <a-menu-item key="4">option4</a-menu-item>
         </a-sub-menu>
         <a-sub-menu key="sub2">
           <template #title>
@@ -72,18 +68,6 @@
 import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 
-// const listData: Record<string, string>[] = [];
-// for (let i = 0; i < 23; i++) {
-//   listData.push({
-//     href: 'https://www.antdv.com/',
-//     title: `ant design vue part ${i}`,
-//     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-//     description:
-//         'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-//     content:
-//         'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-//   });
-// }
 
 export default defineComponent({
   name: 'Home',
