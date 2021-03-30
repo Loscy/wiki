@@ -209,6 +209,24 @@ export default defineComponent({
       }
     }
 
+    const ids: Array<string> = [];
+
+    const getDeleteIds = (treeSelectData: any, id: any) => {
+      for(let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if(node.id === id) {
+          console.log("disable", node);
+          ids.push(id);
+          const children = node.children;
+          if(Tool.isNotEmpty(children)) {
+            for(let j = 0; j < children.length; j++) {
+              getDeleteIds(children, children[j].id)
+            }
+          }
+        }
+      }
+    }
+
     /*
     * 编辑
     * */
@@ -242,9 +260,10 @@ export default defineComponent({
     * 删除
     * */
     const handleDelete = (id: number) => {
+      getDeleteIds(level1.value, id);
       modalLoading.value = true;
 
-      axios.delete("/doc/delete/" + id).then((response) => {
+      axios.delete("/doc/delete/" + ids.join(",")).then((response) => {
         const data = response.data;
         if(data.success) {
           modalVisible.value = false;
