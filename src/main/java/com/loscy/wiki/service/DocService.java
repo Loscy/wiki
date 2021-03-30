@@ -100,7 +100,13 @@ public class DocService {
 
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
-        return content.getContent();
+        //// 文档阅读数+1
+        //docMapperCust.increaseViewCount(id);
+        if (ObjectUtils.isEmpty(content)) {
+            return "";
+        } else {
+            return content.getContent();
+        }
     }
 
 }

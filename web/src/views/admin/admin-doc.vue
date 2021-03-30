@@ -202,7 +202,8 @@ export default defineComponent({
         const data = response.data;
         modalLoading.value = false;
         if(data.success) {
-          modalVisible.value = false;
+
+          message.success("保存成功！")
 
           //重新加载列表
           handleQuery();
@@ -271,6 +272,7 @@ export default defineComponent({
     * 编辑
     * */
     const edit = (record: any) => {
+      editor.txt.html("");
       modalVisible.value = true;
 
       doc.value = Tool.copy(record);
@@ -287,6 +289,7 @@ export default defineComponent({
     * 新增
     * */
     const add = () => {
+      editor.txt.html("");
 
       modalVisible.value = true;
 
