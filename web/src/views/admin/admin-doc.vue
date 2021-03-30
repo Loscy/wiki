@@ -63,15 +63,18 @@
           <a-input v-model:value="doc.name" />
         </a-form-item>
         <a-form-item label="父文档">
-          <a-select v-model:value="doc.parent" ref="select">
-            <a-select-option value="0">
-              无
-            </a-select-option>
-            <a-select-option v-for="c in level1" :key="c.id" :value="c.id" :disabled="doc.id === c.id">
-              {{ c.name }}
-            </a-select-option>
-          </a-select>
+          <a-tree-select
+              v-model:value="doc.parent"
+              style="width: 100%"
+              :dropdown-style="{maxHight: '400px', overflow: 'auto'}"
+              :tree-data="treeSelectData"
+              placeholder = "请选择父文档"
+              tree-default-expand-all
+              :replaceFields="{title: 'name', key: 'id', value: 'id'}"
+          >
+          </a-tree-select>
         </a-form-item>
+
         <a-form-item label="顺序">
           <a-input v-model:value="doc.sort" />
         </a-form-item>
@@ -137,6 +140,7 @@ export default defineComponent({
     * */
     const handleQuery = () => {
       loading.value = true;
+      level1.value = [];
       axios.get("/doc/all").then((response) => {
         loading.value = false;
         const data = response.data;
@@ -159,6 +163,10 @@ export default defineComponent({
     /*
     * 表单
     * */
+
+    //因为树选择组件的属性状态会变化，所以用响应式变量
+    const treeSelectData = ref();
+    treeSelectData.value = [];
     const doc = ref({});
     const modalVisible = ref(false);
     const modalLoading = ref(false);
@@ -179,6 +187,25 @@ export default defineComponent({
       })
     }
 
+    /*
+    * 将某节点及其子孙节点全部部署为disabled
+    * */
+    const setDisabled = (treeSelectData: any, id: any) => {
+      for(let i = 0; i < treeSelectData.length; i++) {
+        const node = treeSelectData[i];
+        if(node.id === id) {
+          console.log("disable", node);
+          node.disabled = true;
+
+          const children = node.children;
+          if(Tool.isNotEmpty(children)) {
+            for(let j = 0; j < children.length; j++) {
+              setDisabled(children, children[j].id)
+            }
+          }
+        }
+      }
+    }
 
     /*
     * 编辑
@@ -186,6 +213,12 @@ export default defineComponent({
     const edit = (record: any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
+
+      treeSelectData.value = Tool.copy(level1.value);
+      setDisabled(treeSelectData.value, record.id);
+
+      //添加一个无 unshift往数组前添加元素
+      treeSelectData.value.unshift({id: 0, name: '无'});
     };
 
     /*
@@ -193,7 +226,12 @@ export default defineComponent({
     * */
     const add = () => {
       modalVisible.value = true;
-      doc.value = {}
+      doc.value = {};
+
+      treeSelectData.value = Tool.copy(level1.value);
+
+      //添加一个无
+      treeSelectData.value.unshift({id: 0, name: '无'});
     }
 
     /*
@@ -220,6 +258,7 @@ export default defineComponent({
 
     return {
       // docs,
+      treeSelectData,
       level1,
       columns,
       loading,
