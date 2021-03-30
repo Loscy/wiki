@@ -52,15 +52,6 @@ public class DocService {
 
         PageInfo<Doc> pageInfo = new PageInfo<>(doclist);
 
-        //List<DocResp> respList = new ArrayList<>();
-        //for (Doc doc : doclist) {
-        //    //DocResp docResp = new DocResp();
-        //    //BeanUtils.copyProperties(doc, docResp);
-        //
-        //    DocResp docResp = CopyUtil.copy(doc, DocResp.class);
-        //    respList.add(docResp);
-        //}
-
         //列表复制
         List<DocQueryResp> list = CopyUtil.copyList(doclist, DocQueryResp.class);
 
@@ -106,4 +97,10 @@ public class DocService {
         criteria.andIdIn(ids);
         docMapper.deleteByExample(docExample);
     }
+
+    public String findContent(Long id) {
+        Content content = contentMapper.selectByPrimaryKey(id);
+        return content.getContent();
+    }
+
 }
