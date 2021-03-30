@@ -187,7 +187,8 @@ export default defineComponent({
     //因为树选择组件的属性状态会变化，所以用响应式变量
     const treeSelectData = ref();
     treeSelectData.value = [];
-    const doc = ref({});
+    const doc = ref();
+    doc.value = [];
     const modalVisible = ref(false);
     const modalLoading = ref(false);
     const editor = new E("#content");
@@ -195,7 +196,7 @@ export default defineComponent({
 
     const handleSave = () => {
       modalLoading.value = true;
-
+      doc.value.content = editor.txt.html();
       axios.post("/doc/save", doc.value).then((response) => {
         const data = response.data;
         modalLoading.value = false;
