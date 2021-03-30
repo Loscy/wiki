@@ -78,6 +78,10 @@
         <a-form-item label="顺序">
           <a-input v-model:value="doc.sort" />
         </a-form-item>
+        <a-form-item label="内容">
+          <div id="content">
+          </div>
+        </a-form-item>
       </a-form>
   </a-modal>
 </template>
@@ -88,6 +92,8 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import { Tool } from "@/util/tool";
 import {useRoute} from "vue-router";
+import E from "wangeditor"
+
 
 const listData: Record<string, string>[] = [];
 
@@ -172,6 +178,8 @@ export default defineComponent({
     const doc = ref({});
     const modalVisible = ref(false);
     const modalLoading = ref(false);
+    const editor = new E("#content");
+
     const handleModalOk = () => {
       modalLoading.value = true;
 
@@ -231,7 +239,9 @@ export default defineComponent({
     * 编辑
     * */
     const edit = (record: any) => {
+
       modalVisible.value = true;
+
       doc.value = Tool.copy(record);
 
       treeSelectData.value = Tool.copy(level1.value);
@@ -239,13 +249,18 @@ export default defineComponent({
 
       //添加一个无 unshift往数组前添加元素
       treeSelectData.value.unshift({id: 0, name: '无'});
+      setTimeout(function () {
+        editor.create();
+      },100);
     };
 
     /*
     * 新增
     * */
     const add = () => {
+
       modalVisible.value = true;
+
       doc.value = {
         ebookId: route.query.ebookId
       };
@@ -254,12 +269,17 @@ export default defineComponent({
 
       //添加一个无
       treeSelectData.value.unshift({id: 0, name: '无'});
+      setTimeout(function () {
+        editor.create();
+      },100);
+
     }
 
     /*
     * 删除
     * */
     const handleDelete = (id: number) => {
+      ids.length = 0;
       getDeleteIds(level1.value, id);
       modalLoading.value = true;
 
