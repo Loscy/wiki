@@ -2,8 +2,8 @@ package com.loscy.wiki.controller;
 
 import com.loscy.wiki.req.DocQueryReq;
 import com.loscy.wiki.req.DocSaveReq;
-import com.loscy.wiki.resp.CommonResp;
 import com.loscy.wiki.resp.DocQueryResp;
+import com.loscy.wiki.resp.CommonResp;
 import com.loscy.wiki.resp.PageResp;
 import com.loscy.wiki.service.DocService;
 import org.springframework.web.bind.annotation.*;
@@ -20,41 +20,49 @@ public class DocController {
     @Resource
     private DocService docService;
 
-    @GetMapping ("/list")
-    public CommonResp list(@Valid DocQueryReq req){
+    @GetMapping("/all/{ebookId}")
+    public CommonResp all(@PathVariable Long ebookId) {
+        CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
+        List<DocQueryResp> list = docService.all(ebookId);
+        resp.setContent(list);
+        return resp;
+    }
+
+    @GetMapping("/list")
+    public CommonResp list(@Valid DocQueryReq req) {
         CommonResp<PageResp<DocQueryResp>> resp = new CommonResp<>();
         PageResp<DocQueryResp> list = docService.list(req);
         resp.setContent(list);
         return resp;
     }
-    @GetMapping ("/all")
-    public CommonResp all(){
-        CommonResp<List<DocQueryResp>> resp = new CommonResp<>();
-        List<DocQueryResp> list = docService.all();
-        resp.setContent(list);
-        return resp;
-    }
 
     @PostMapping("/save")
-    public CommonResp save(@Valid @RequestBody DocSaveReq req){
+    public CommonResp save(@Valid @RequestBody DocSaveReq req) {
         CommonResp resp = new CommonResp<>();
         docService.save(req);
         return resp;
     }
 
     @DeleteMapping("/delete/{idsStr}")
-    public CommonResp delete(@PathVariable String idsStr){
+    public CommonResp delete(@PathVariable String idsStr) {
         CommonResp resp = new CommonResp<>();
         List<String> list = Arrays.asList(idsStr.split(","));
         docService.delete(list);
         return resp;
     }
 
-    @GetMapping ("/find-content/{id}")
-    public CommonResp findContent(@PathVariable Long id){
+    @GetMapping("/find-content/{id}")
+    public CommonResp findContent(@PathVariable Long id) {
         CommonResp<String> resp = new CommonResp<>();
         String content = docService.findContent(id);
         resp.setContent(content);
         return resp;
     }
+
+    //@GetMapping("/vote/{id}")
+    //public CommonResp vote(@PathVariable Long id) {
+    //    CommonResp commonResp = new CommonResp();
+    //    docService.vote(id);
+    //    return commonResp;
+    //}
 }
