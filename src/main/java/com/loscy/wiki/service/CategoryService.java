@@ -59,7 +59,7 @@ public class CategoryService {
         //列表复制
         List<CategoryQueryResp> list = CopyUtil.copyList(categorylist, CategoryQueryResp.class);
 
-        PageResp<CategoryQueryResp> pageResp = new PageResp<>();
+        PageResp<CategoryQueryResp> pageResp = new PageResp();
         pageResp.setTotal(pageInfo.getTotal());
         pageResp.setList(list);
 
