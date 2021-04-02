@@ -1,7 +1,7 @@
 <template>
   <a-layout-footer style="text-align: center">
-    Ant Design ©2021 Created by Ant UED
-    欢迎：{{user.name}}
+    Ant Design ©2021，
+    <span v-show="user.id">欢迎：{{user.name}}</span>
   </a-layout-footer>
 </template>
 
