@@ -14,6 +14,7 @@ import com.loscy.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,8 +34,8 @@ public class UserController {
     @Resource
     private SnowFlake snowFlake;
 
-    //@Resource
-    //private RedisTemplate redisTemplate;
+    @Resource
+    private RedisTemplate redisTemplate;
 
     @GetMapping("/list")
     public CommonResp list(@Valid UserQueryReq req) {
@@ -76,7 +77,7 @@ public class UserController {
         Long token = snowFlake.nextId();
         LOG.info("生成单点登录token：{}，并放入redis中", token);
         userLoginResp.setToken(token.toString());
-        //redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(token.toString(), JSONObject.toJSONString(userLoginResp), 3600 * 24, TimeUnit.SECONDS);
 
         resp.setContent(userLoginResp);
         return resp;
