@@ -10,6 +10,7 @@ import com.loscy.wiki.domain.DocExample;
 import com.loscy.wiki.mapper.ContentMapper;
 import com.loscy.wiki.mapper.DocMapper;
 //import com.loscy.wiki.mapper.DocMapperCust;
+import com.loscy.wiki.mapper.DocMapperCust;
 import com.loscy.wiki.req.DocQueryReq;
 import com.loscy.wiki.req.DocSaveReq;
 import com.loscy.wiki.resp.DocQueryResp;
@@ -36,8 +37,8 @@ public class DocService {
     @Resource
     private DocMapper docMapper;
 
-    //@Resource
-    //private DocMapperCust docMapperCust;
+    @Resource
+    private DocMapperCust docMapperCust;
 
     @Resource
     private ContentMapper contentMapper;
@@ -137,7 +138,7 @@ public class DocService {
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
         // 文档阅读数+1
-        //docMapperCust.increaseViewCount(id);
+        docMapperCust.increaseViewCount(id);
         if (ObjectUtils.isEmpty(content)) {
             return "";
         } else {
