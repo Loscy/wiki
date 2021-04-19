@@ -31,7 +31,7 @@ public class ActionInterceptor implements HandlerInterceptor {
         }
 
         UserLoginResp userLoginResp = LoginUserContext.getUser();
-        if ("admin".equals(userLoginResp.getLoginName())) {
+        if ("0001".equals(userLoginResp.getLoginName())) {
             // admin用户不拦截
             return true;
         }
