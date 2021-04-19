@@ -177,7 +177,7 @@ public class DocService {
     public void vote(Long id) {
         //docMapperCust.increaseVoteCount(id);
         String ip = RequestContext.getRemoteAddr();
-        if(redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5)) {
+        if(redisUtil.validateRepeat("DOC_VOTE_LO_" + id + "_" + ip, 5)) {
             docMapperCust.increaseVoteCount(id);
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
