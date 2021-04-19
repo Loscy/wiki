@@ -20,6 +20,8 @@ import com.loscy.wiki.resp.PageResp;
 import com.loscy.wiki.util.CopyUtil;
 //import com.loscy.wiki.util.RedisUtil;
 //import com.loscy.wiki.util.RequestContext;
+import com.loscy.wiki.util.RedisUtil;
+import com.loscy.wiki.util.RequestContext;
 import com.loscy.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +29,6 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.servlet.support.RequestContext;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -49,8 +50,8 @@ public class DocService {
     @Resource
     private SnowFlake snowFlake;
 
-    //@Resource
-    //public RedisUtil redisUtil;
+    @Resource
+    public RedisUtil redisUtil;
     //
     //@Resource
     //public WsService wsService;
@@ -174,6 +175,12 @@ public class DocService {
     //}
 
     public void vote(Long id) {
-        docMapperCust.increaseVoteCount(id);
+        //docMapperCust.increaseVoteCount(id);
+        String ip = RequestContext.getRemoteAddr();
+        if(redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
     }
 }
