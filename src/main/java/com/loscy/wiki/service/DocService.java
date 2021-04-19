@@ -7,6 +7,8 @@ import com.loscy.wiki.domain.Doc;
 import com.loscy.wiki.domain.DocExample;
 //import com.loscy.wiki.exception.BusinessException;
 //import com.loscy.wiki.exception.BusinessExceptionCode;
+import com.loscy.wiki.exception.BusinessException;
+import com.loscy.wiki.exception.BusinessExceptionCode;
 import com.loscy.wiki.mapper.ContentMapper;
 import com.loscy.wiki.mapper.DocMapper;
 //import com.loscy.wiki.mapper.DocMapperCust;
@@ -25,6 +27,7 @@ import org.slf4j.MDC;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.servlet.support.RequestContext;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -169,4 +172,8 @@ public class DocService {
     //public void updateEbookInfo() {
     //    docMapperCust.updateEbookInfo();
     //}
+
+    public void vote(Long id) {
+        docMapperCust.increaseVoteCount(id);
+    }
 }
