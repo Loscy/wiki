@@ -5,24 +5,20 @@ import com.github.pagehelper.PageInfo;
 import com.loscy.wiki.domain.Content;
 import com.loscy.wiki.domain.Doc;
 import com.loscy.wiki.domain.DocExample;
-//import com.loscy.wiki.exception.BusinessException;
-//import com.loscy.wiki.exception.BusinessExceptionCode;
 import com.loscy.wiki.exception.BusinessException;
 import com.loscy.wiki.exception.BusinessExceptionCode;
 import com.loscy.wiki.mapper.ContentMapper;
 import com.loscy.wiki.mapper.DocMapper;
-//import com.loscy.wiki.mapper.DocMapperCust;
 import com.loscy.wiki.mapper.DocMapperCust;
 import com.loscy.wiki.req.DocQueryReq;
 import com.loscy.wiki.req.DocSaveReq;
 import com.loscy.wiki.resp.DocQueryResp;
 import com.loscy.wiki.resp.PageResp;
 import com.loscy.wiki.util.CopyUtil;
-//import com.loscy.wiki.util.RedisUtil;
-//import com.loscy.wiki.util.RequestContext;
 import com.loscy.wiki.util.RedisUtil;
 import com.loscy.wiki.util.RequestContext;
 import com.loscy.wiki.util.SnowFlake;
+//import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -56,8 +52,8 @@ public class DocService {
     @Resource
     public WsService wsService;
 
-    // @Resource
-    // private RocketMQTemplate rocketMQTemplate;
+     //@Resource
+     //private RocketMQTemplate rocketMQTemplate;
 
     public List<DocQueryResp> all(Long ebookId) {
         DocExample docExample = new DocExample();
@@ -157,7 +153,7 @@ public class DocService {
         // docMapperCust.increaseVoteCount(id);
         // 远程IP+doc.id作为key，24小时内不能重复
         String ip = RequestContext.getRemoteAddr();
-        if (redisUtil.validateRepeat("DOC_VOTE_LC" + id + "_" + ip, 5000)) {
+        if (redisUtil.validateRepeat("DOC_VOTE_LY" + id + "_" + ip, 5)) {
             docMapperCust.increaseVoteCount(id);
         } else {
             throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
