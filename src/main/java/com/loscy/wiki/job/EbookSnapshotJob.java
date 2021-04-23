@@ -1,6 +1,6 @@
 package com.loscy.wiki.job;
 
-import com.loscy.wiki.service.ebookSnapshotService;
+import com.loscy.wiki.service.EbookSnapshotService;
 import com.loscy.wiki.util.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +16,7 @@ public class EbookSnapshotJob {
     private static final Logger LOG = LoggerFactory.getLogger(EbookSnapshotJob.class);
 
     @Resource
-    private ebookSnapshotService ebookSnapshotService;
+    private EbookSnapshotService ebookSnapshotService;
 
     @Resource
     private SnowFlake snowFlake;
