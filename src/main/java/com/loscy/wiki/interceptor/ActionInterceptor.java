@@ -31,7 +31,7 @@ public class ActionInterceptor implements HandlerInterceptor {
         }
 
         UserLoginResp userLoginResp = LoginUserContext.getUser();
-        if ("0001".equals(userLoginResp.getLoginName())) {
+        if ("admin".equals(userLoginResp.getLoginName())) {
             // admin用户不拦截
             return true;
         }
@@ -40,7 +40,7 @@ public class ActionInterceptor implements HandlerInterceptor {
         response.setStatus(HttpStatus.OK.value());
         CommonResp commonResp = new CommonResp();
         commonResp.setSuccess(false);
-        commonResp.setMessage("哈哈，操作被拦截了，你就当操作成功了！示例网站暂不开放增删改操作");
+        commonResp.setMessage("Loscy：您被拦截了，非管理员用户禁止操作");
         response.setContentType("application/json;charset=UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.getWriter().print(JSONObject.toJSON(commonResp));
