@@ -1,5 +1,5 @@
 <template>
   <div class="about">
-    <h1>关于我们</h1>
+    <h1>我是Loscy，学海无涯，请多关照</h1>
   </div>
 </template>
